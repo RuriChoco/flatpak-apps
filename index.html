@@ -1,24 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Photopaper | RuriChoco Apps</title>
     <meta name="description" content="Personal Flatpak repository for RuriChoco applications.">
-    <!-- Load modern typography -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;800&family=Fira+Code&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #0b0f19;
-            --glass-bg: rgba(17, 24, 39, 0.65);
-            --glass-border: rgba(255, 255, 255, 0.08);
-            --primary: #8b5cf6;
-            --primary-hover: #7c3aed;
-            --secondary: #3b82f6;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
+            /* Libadwaita Dark Theme Colors */
+            --window-bg: #242424;
+            --view-bg: #1e1e1e;
+            --headerbar-bg: #303030;
+            --card-bg: #303030;
+            --card-border: rgba(255, 255, 255, 0.05);
+            --text-main: #ffffff;
+            --text-muted: rgba(255, 255, 255, 0.55);
+            --accent: #3584e4;
+            --accent-hover: #4a90d9;
+            --accent-active: #1b6acb;
+            --btn-bg: rgba(255, 255, 255, 0.1);
+            --btn-hover: rgba(255, 255, 255, 0.15);
+            --btn-active: rgba(255, 255, 255, 0.2);
+            --border-radius-large: 12px;
+            --border-radius-small: 6px;
         }
 
         * {
@@ -28,370 +32,286 @@
         }
 
         body {
-            font-family: 'Outfit', sans-serif;
-            background-color: var(--bg-color);
+            /* Adwaita relies on system fonts, especially Cantarell on GNOME */
+            font-family: 'Cantarell', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--window-bg);
             color: var(--text-main);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Mock HeaderBar */
+        .headerbar {
+            background-color: var(--headerbar-bg);
+            height: 46px;
+            display: flex;
             align-items: center;
             justify-content: center;
-            line-height: 1.6;
-            overflow-x: hidden;
-            position: relative;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+            box-shadow: inset 0 1px rgba(255, 255, 255, 0.05);
+            font-weight: 700;
+            font-size: 0.95rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            user-select: none;
         }
 
-        /* Animated Background Blobs */
-        .blob {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(80px);
-            z-index: -1;
-            animation: float 20s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .blob-1 {
-            top: -10%;
-            left: -10%;
-            width: 50vw;
-            height: 50vw;
-            background: rgba(139, 92, 246, 0.15); /* Purple */
-            animation-delay: 0s;
-        }
-
-        .blob-2 {
-            bottom: -20%;
-            right: -10%;
-            width: 60vw;
-            height: 60vw;
-            background: rgba(59, 130, 246, 0.15); /* Blue */
-            animation-delay: -5s;
-        }
-
-        @keyframes float {
-            0% { transform: translate(0, 0) scale(1); }
-            50% { transform: translate(5%, 10%) scale(1.1); }
-            100% { transform: translate(-5%, -5%) scale(0.9); }
+        .main-content {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            padding: 2.5rem 1.5rem;
+            background-color: var(--view-bg);
         }
 
         .container {
             width: 100%;
-            max-width: 700px;
-            padding: 2rem;
-            z-index: 10;
+            max-width: 680px;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
         }
 
-        /* App Header */
-        header {
+        /* App Banner / Header (GNOME Software Style) */
+        .app-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             text-align: center;
-            margin-bottom: 2.5rem;
-            animation: fadeInDown 0.8s ease-out forwards;
+            gap: 1rem;
+            margin-bottom: 1rem;
         }
 
         .app-icon {
-            width: 120px;
-            height: 120px;
-            margin-bottom: 1rem;
-            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3));
-            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            width: 128px;
+            height: 128px;
+            border-radius: 24px; /* Adwaita icon radius */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.3);
         }
 
-        .app-icon:hover {
-            transform: scale(1.1) rotate(-5deg);
-        }
-
-        h1 {
-            font-size: 3.5rem;
+        .app-title {
+            font-size: 2.2rem;
             font-weight: 800;
-            line-height: 1.1;
-            margin-bottom: 0.5rem;
-            background: linear-gradient(135deg, #fff, #94a3b8);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: -1px;
+            letter-spacing: -0.5px;
         }
 
-        header p {
-            color: var(--text-muted);
+        .app-developer {
+            color: var(--accent);
             font-size: 1.1rem;
-            font-weight: 300;
-        }
-
-        /* Glassmorphism Card */
-        .card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            padding: 2.5rem;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-            animation: fadeInUp 0.8s ease-out forwards 0.2s;
-            opacity: 0;
-            transform: translateY(20px);
-        }
-
-        h2 {
-            font-size: 1.4rem;
             font-weight: 600;
-            margin-bottom: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
+            margin-top: -0.5rem;
         }
 
-        /* Command Line Block */
-        .terminal {
-            background: #000;
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        /* Boxed Lists (Standard Adwaita UI Element) */
+        .boxed-list {
+            background: var(--card-bg);
+            border-radius: var(--border-radius-large);
+            border: 1px solid var(--card-border);
             overflow: hidden;
-            margin-bottom: 1.5rem;
-            box-shadow: inset 0 2px 10px rgba(0,0,0,0.5);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
 
-        .terminal-header {
-            background: #1f2937;
+        .boxed-list-header {
             padding: 0.5rem 1rem;
-            display: flex;
-            gap: 6px;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-        }
-
-        .dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-        }
-        .dot.red { background: #ef4444; }
-        .dot.yellow { background: #eab308; }
-        .dot.green { background: #22c55e; }
-
-        .terminal-body {
-            padding: 1.2rem;
-            font-family: 'Fira Code', monospace;
             font-size: 0.9rem;
-            color: #e2e8f0;
-            position: relative;
-        }
-
-        .cmd-group {
-            margin-bottom: 1rem;
-            position: relative;
-        }
-        .cmd-group:last-child {
-            margin-bottom: 0;
-        }
-
-        .cmd-comment {
-            color: #6b7280;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
             margin-bottom: 0.2rem;
-            display: block;
+            margin-top: 1rem;
         }
 
-        .cmd-line {
+        .boxed-row {
+            padding: 1rem 1.2rem;
+            border-bottom: 1px solid var(--card-border);
             display: flex;
-            align-items: flex-start;
-        }
-        
-        .cmd-line::before {
-            content: "$ ";
-            color: var(--primary);
-            margin-right: 8px;
-            user-select: none;
+            flex-direction: column;
+            gap: 0.8rem;
         }
 
-        .cmd-text {
-            word-break: break-all;
-            flex-grow: 1;
+        .boxed-row:last-child {
+            border-bottom: none;
         }
 
-        .copy-btn {
-            position: absolute;
-            right: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(255,255,255,0.1);
-            border: none;
-            color: #fff;
-            padding: 6px 10px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.8rem;
-            opacity: 0;
-            transition: all 0.2s ease;
-            font-family: 'Outfit', sans-serif;
+        .boxed-row-title {
+            font-weight: 600;
+            font-size: 1.1rem;
         }
 
-        .cmd-group:hover .copy-btn {
-            opacity: 1;
+        .boxed-row-subtitle {
+            color: var(--text-muted);
+            font-size: 0.95rem;
         }
 
-        .copy-btn:hover {
-            background: rgba(255,255,255,0.2);
-        }
-        
-        .copy-btn.copied {
-            background: #10b981;
-            color: #fff;
-        }
-
-        /* CTA Button */
-        .btn {
-            display: flex;
+        /* Adwaita Suggested Action Button */
+        .btn-suggested {
+            display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 0.8rem;
-            width: 100%;
-            background: #3584e4; /* Adwaita Suggested Blue */
+            gap: 0.6rem;
+            background: var(--accent);
             color: white;
             text-decoration: none;
-            padding: 1rem 2rem;
-            border-radius: 8px;
+            padding: 0.6rem 2.5rem;
+            border-radius: var(--border-radius-small);
             font-weight: 700;
-            font-size: 1.1rem;
-            transition: all 0.2s ease;
-            border: 1px solid rgba(255,255,255,0.1);
-            box-shadow: inset 0 1px rgba(255, 255, 255, 0.2), 0 2px 5px rgba(0,0,0,0.2);
+            font-size: 1rem;
+            transition: all 0.1s ease-in-out;
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            box-shadow: inset 0 1px rgba(255, 255, 255, 0.15), 0 1px 2px rgba(0, 0, 0, 0.1);
             cursor: pointer;
         }
 
-        .btn:hover {
-            background: #4a90d9;
-            transform: translateY(-1px);
+        .btn-suggested:hover {
+            background: var(--accent-hover);
         }
 
-        .btn:active {
-            background: #1b6acb;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
-            transform: translateY(1px);
+        .btn-suggested:active {
+            background: var(--accent-active);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Adwaita Standard Button */
+        .btn-standard {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--btn-bg);
+            color: var(--text-main);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius-small);
+            font-weight: 600;
+            font-size: 0.9rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.1s ease-in-out;
+            cursor: pointer;
+        }
+
+        .btn-standard:hover {
+            background: var(--btn-hover);
+        }
+
+        .btn-standard:active {
+            background: var(--btn-active);
+        }
+
+        /* Command Line Snippet */
+        .snippet-box {
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: var(--border-radius-small);
+            padding: 0.8rem 1rem;
+            font-family: 'Fira Code', 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: #d1d5db;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            gap: 1rem;
+        }
+
+        .snippet-text {
+            word-break: break-all;
+        }
+
+        .snippet-text::before {
+            content: "$ ";
+            color: var(--text-muted);
+            user-select: none;
         }
 
         footer {
             text-align: center;
-            margin-top: 3rem;
+            padding: 2rem;
             color: var(--text-muted);
-            font-size: 0.95rem;
-            animation: fadeInUp 0.8s ease-out forwards 0.4s;
-            opacity: 0;
+            font-size: 0.9rem;
+            background: var(--window-bg);
         }
-
+        
         footer a {
-            color: var(--text-main);
+            color: var(--accent);
             text-decoration: none;
-            font-weight: 500;
-            transition: color 0.2s;
-        }
-
-        footer a:hover {
-            color: var(--primary);
-        }
-
-        /* Animations */
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 <body>
 
-    <div class="blob blob-1"></div>
-    <div class="blob blob-2"></div>
-
-    <div class="container">
-        <header>
-            <img src="photopaper.svg" alt="Photopaper Icon" class="app-icon" onerror="this.style.display='none'">
-            <h1>Photopaper</h1>
-            <p>RuriChoco's Official Flatpak Repository</p>
-        </header>
-
-        <div class="card">
-            <h2>💻 Command Line Installation</h2>
-            
-            <div class="terminal">
-                <div class="terminal-header">
-                    <div class="dot red"></div>
-                    <div class="dot yellow"></div>
-                    <div class="dot green"></div>
-                </div>
-                <div class="terminal-body">
-                    
-                    <div class="cmd-group">
-                        <span class="cmd-comment"># 1. Add the repository to your system</span>
-                        <div class="cmd-line">
-                            <span class="cmd-text" id="cmd1">flatpak remote-add --if-not-exists RuriChoco https://rurichoco.github.io/flatpak-apps/RuriChoco.flatpakrepo</span>
-                            <button class="copy-btn" onclick="copyText('cmd1', this)">Copy</button>
-                        </div>
-                    </div>
-
-                    <div class="cmd-group" style="margin-top: 1.5rem;">
-                        <span class="cmd-comment"># 2. Install Photopaper</span>
-                        <div class="cmd-line">
-                            <span class="cmd-text" id="cmd2">flatpak install RuriChoco com.github.RuriChoco.Photopaper</span>
-                            <button class="copy-btn" onclick="copyText('cmd2', this)">Copy</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div style="text-align: center; margin: 2rem 0; color: var(--text-muted); display: flex; align-items: center;">
-                <hr style="flex-grow: 1; border: none; border-top: 1px solid var(--glass-border);">
-                <span style="padding: 0 1rem; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px;">OR</span>
-                <hr style="flex-grow: 1; border: none; border-top: 1px solid var(--glass-border);">
-            </div>
-
-            <a href="RuriChoco.flatpakrepo" class="btn">
-                <img src="download-symbolic.svg" alt="Download" style="width: 1.2rem; height: 1.2rem; filter: invert(1);">
-                Download .flatpakrepo (GNOME Software)
-            </a>
-        </div>
-        
-        <footer>
-            Built with ❤️ by <a href="https://github.com/RuriChoco" target="_blank">RuriChoco</a>.
-        </footer>
+    <div class="headerbar">
+        Software
     </div>
 
+    <div class="main-content">
+        <div class="container">
+            
+            <div class="app-header">
+                <img src="photopaper.svg" alt="Photopaper Icon" class="app-icon" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22128%22 height=%22128%22><rect width=%22128%22 height=%22128%22 fill=%22%23444%22 rx=%2224%22/></svg>'">
+                <div class="app-title">Photopaper</div>
+                <div class="app-developer">RuriChoco</div>
+                
+                <div style="margin-top: 0.5rem;">
+                    <a href="RuriChoco.flatpakrepo" class="btn-suggested">
+                        <img src="download-symbolic.svg" alt="" style="width: 16px; height: 16px; filter: invert(1);">
+                        Install via GNOME Software
+                    </a>
+                </div>
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.5rem; max-width: 400px;">
+                    This will download the repository configuration file. Open it with GNOME Software to enable 1-click installations.
+                </p>
+            </div>
+
+            <div>
+                <div class="boxed-list-header">Manual Installation</div>
+                <div class="boxed-list">
+                    
+                    <div class="boxed-row">
+                        <div>
+                            <div class="boxed-row-title">Add the Repository</div>
+                            <div class="boxed-row-subtitle">Register the Flatpak remote on your system.</div>
+                        </div>
+                        <div class="snippet-box">
+                            <span class="snippet-text" id="cmd1">flatpak remote-add --if-not-exists RuriChoco https://rurichoco.github.io/flatpak-apps/RuriChoco.flatpakrepo</span>
+                            <button class="btn-standard" onclick="copyText('cmd1', this)">Copy</button>
+                        </div>
+                    </div>
+
+                    <div class="boxed-row">
+                        <div>
+                            <div class="boxed-row-title">Install App</div>
+                            <div class="boxed-row-subtitle">Download and install Photopaper.</div>
+                        </div>
+                        <div class="snippet-box">
+                            <span class="snippet-text" id="cmd2">flatpak install RuriChoco com.github.RuriChoco.Photopaper</span>
+                            <button class="btn-standard" onclick="copyText('cmd2', this)">Copy</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <footer>
+        Built with ❤️ for GNOME by <a href="https://github.com/RuriChoco" target="_blank">RuriChoco</a>.
+    </footer>
+
     <script>
-        // Copy to clipboard functionality
         function copyText(elementId, btn) {
             const text = document.getElementById(elementId).innerText;
             navigator.clipboard.writeText(text).then(() => {
                 const originalText = btn.innerText;
                 btn.innerText = 'Copied!';
-                btn.classList.add('copied');
-                
                 setTimeout(() => {
                     btn.innerText = originalText;
-                    btn.classList.remove('copied');
                 }, 2000);
             });
         }
-
-        // Optional: Add simple 3D tilt effect on card mousemove
-        const card = document.querySelector('.card');
-        card.addEventListener('mousemove', (e) => {
-            const rect = card.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            
-            const centerX = rect.width / 2;
-            const centerY = rect.height / 2;
-            
-            const rotateX = ((y - centerY) / centerY) * -5;
-            const rotateY = ((x - centerX) / centerX) * 5;
-            
-            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
-        });
-
-        card.addEventListener('mouseleave', () => {
-            card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
-        });
     </script>
 </body>
 </html>
