@@ -3,15 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RuriChoco Flatpak Apps</title>
+    <title>Photopaper | RuriChoco Apps</title>
     <meta name="description" content="Personal Flatpak repository for RuriChoco applications.">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <!-- Load modern typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;800&family=Fira+Code&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #0f172a;
-            --card-bg: rgba(30, 41, 59, 0.7);
-            --primary: #3b82f6;
-            --primary-hover: #2563eb;
+            --bg-color: #0b0f19;
+            --glass-bg: rgba(17, 24, 39, 0.65);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --primary: #8b5cf6;
+            --primary-hover: #7c3aed;
+            --secondary: #3b82f6;
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
         }
@@ -23,11 +28,8 @@
         }
 
         body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg-color);
-            background-image: 
-                radial-gradient(circle at 15% 50%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 85% 30%, rgba(147, 51, 234, 0.15) 0%, transparent 50%);
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-color);
             color: var(--text-main);
             min-height: 100vh;
             display: flex;
@@ -35,177 +37,325 @@
             align-items: center;
             justify-content: center;
             line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated Background Blobs */
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: -1;
+            animation: float 20s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .blob-1 {
+            top: -10%;
+            left: -10%;
+            width: 50vw;
+            height: 50vw;
+            background: rgba(139, 92, 246, 0.15); /* Purple */
+            animation-delay: 0s;
+        }
+
+        .blob-2 {
+            bottom: -20%;
+            right: -10%;
+            width: 60vw;
+            height: 60vw;
+            background: rgba(59, 130, 246, 0.15); /* Blue */
+            animation-delay: -5s;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(5%, 10%) scale(1.1); }
+            100% { transform: translate(-5%, -5%) scale(0.9); }
         }
 
         .container {
             width: 100%;
-            max-width: 800px;
+            max-width: 700px;
             padding: 2rem;
-            display: flex;
-            flex-direction: column;
-            gap: 2rem;
+            z-index: 10;
         }
 
+        /* App Header */
         header {
             text-align: center;
+            margin-bottom: 2.5rem;
+            animation: fadeInDown 0.8s ease-out forwards;
+        }
+
+        .app-icon {
+            width: 120px;
+            height: 120px;
             margin-bottom: 1rem;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3));
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .app-icon:hover {
+            transform: scale(1.1) rotate(-5deg);
         }
 
         h1 {
-            font-size: 3rem;
+            font-size: 3.5rem;
             font-weight: 800;
+            line-height: 1.1;
             margin-bottom: 0.5rem;
-            background: linear-gradient(135deg, #60a5fa, #c084fc);
+            background: linear-gradient(135deg, #fff, #94a3b8);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
         }
 
         header p {
             color: var(--text-muted);
             font-size: 1.1rem;
+            font-weight: 300;
         }
 
+        /* Glassmorphism Card */
         .card {
-            background: var(--card-bg);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
-            padding: 2rem;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            animation: fadeInUp 0.8s ease-out forwards 0.2s;
+            opacity: 0;
+            transform: translateY(20px);
         }
 
         h2 {
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             font-weight: 600;
-            margin-bottom: 1rem;
-            color: #e2e8f0;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
+        /* Command Line Block */
+        .terminal {
+            background: #000;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.5);
+        }
+
+        .terminal-header {
+            background: #1f2937;
+            padding: 0.5rem 1rem;
+            display: flex;
+            gap: 6px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+        .dot.red { background: #ef4444; }
+        .dot.yellow { background: #eab308; }
+        .dot.green { background: #22c55e; }
+
+        .terminal-body {
+            padding: 1.2rem;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+            color: #e2e8f0;
+            position: relative;
+        }
+
+        .cmd-group {
+            margin-bottom: 1rem;
+            position: relative;
+        }
+        .cmd-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .cmd-comment {
+            color: #6b7280;
+            margin-bottom: 0.2rem;
+            display: block;
+        }
+
+        .cmd-line {
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .cmd-line::before {
+            content: "$ ";
+            color: var(--primary);
+            margin-right: 8px;
+            user-select: none;
+        }
+
+        .cmd-text {
+            word-break: break-all;
+            flex-grow: 1;
+        }
+
+        .copy-btn {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: #fff;
+            padding: 6px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            opacity: 0;
+            transition: all 0.2s ease;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .cmd-group:hover .copy-btn {
+            opacity: 1;
+        }
+
+        .copy-btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
+        
+        .copy-btn.copied {
+            background: #10b981;
+            color: #fff;
+        }
+
+        /* CTA Button */
         .btn {
-            display: inline-block;
-            background: var(--primary);
+            display: block;
+            width: 100%;
+            text-align: center;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
             text-decoration: none;
-            padding: 0.8rem 1.5rem;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 1rem;
-            transition: all 0.2s ease;
-            text-align: center;
-            width: 100%;
-            border: none;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
             cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.2), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.5s ease;
         }
 
         .btn:hover {
-            background: var(--primary-hover);
-            transform: scale(1.02);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
         }
 
-        .code-block {
-            background: #000;
-            border-radius: 8px;
-            padding: 1rem;
-            font-family: monospace;
-            color: #10b981;
-            overflow-x: auto;
-            margin-top: 1rem;
-            margin-bottom: 1rem;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .code-block::before {
-            content: "$ ";
-            color: #6b7280;
-        }
-
-        .steps {
-            list-style: none;
-            counter-reset: my-counter;
-        }
-
-        .steps li {
-            counter-increment: my-counter;
-            margin-bottom: 1.5rem;
-            position: relative;
-            padding-left: 2.5rem;
-        }
-
-        .steps li::before {
-            content: counter(my-counter);
-            position: absolute;
-            left: 0;
-            top: 2px;
-            width: 1.5rem;
-            height: 1.5rem;
-            background: rgba(59, 130, 246, 0.2);
-            color: #60a5fa;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.85rem;
-            font-weight: 800;
+        .btn:hover::after {
+            transform: translateX(100%);
         }
 
         footer {
             text-align: center;
-            margin-top: 2rem;
+            margin-top: 3rem;
             color: var(--text-muted);
-            font-size: 0.9rem;
+            font-size: 0.95rem;
+            animation: fadeInUp 0.8s ease-out forwards 0.4s;
+            opacity: 0;
         }
 
         footer a {
-            color: #60a5fa;
+            color: var(--text-main);
             text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
         }
 
         footer a:hover {
-            text-decoration: underline;
+            color: var(--primary);
         }
 
-        @media (min-width: 640px) {
-            .btn {
-                width: auto;
-            }
+        /* Animations */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 <body>
 
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+
     <div class="container">
         <header>
-            <h1>RuriChoco Apps</h1>
-            <p>The official Flatpak repository for my personal applications.</p>
+            <img src="photopaper.svg" alt="Photopaper Icon" class="app-icon" onerror="this.style.display='none'">
+            <h1>Photopaper</h1>
+            <p>RuriChoco's Official Flatpak Repository</p>
         </header>
 
         <div class="card">
-            <h2>Add to GNOME Software (Graphical)</h2>
-            <p style="margin-bottom: 1.5rem; color: var(--text-muted);">
-                The easiest way to install apps is to add the repository directly to your software center. Once added, you can search for and install apps like <strong>Photopaper</strong> graphically.
-            </p>
-            <a href="RuriChoco.flatpakrepo" class="btn">⬇️ Add Repository to Flatpak</a>
-        </div>
+            <h2>💻 Command Line Installation</h2>
+            
+            <div class="terminal">
+                <div class="terminal-header">
+                    <div class="dot red"></div>
+                    <div class="dot yellow"></div>
+                    <div class="dot green"></div>
+                </div>
+                <div class="terminal-body">
+                    
+                    <div class="cmd-group">
+                        <span class="cmd-comment"># 1. Add the repository to your system</span>
+                        <div class="cmd-line">
+                            <span class="cmd-text" id="cmd1">flatpak remote-add --if-not-exists RuriChoco https://rurichoco.github.io/flatpak-apps/RuriChoco.flatpakrepo</span>
+                            <button class="copy-btn" onclick="copyText('cmd1', this)">Copy</button>
+                        </div>
+                    </div>
 
-        <div class="card">
-            <h2>Command Line Installation</h2>
-            <ol class="steps">
-                <li>
-                    <p>Add the repository to your system:</p>
-                    <div class="code-block">flatpak remote-add --if-not-exists RuriChoco https://rurichoco.github.io/flatpak-apps/RuriChoco.flatpakrepo</div>
-                </li>
-                <li>
-                    <p>Install Photopaper:</p>
-                    <div class="code-block">flatpak install RuriChoco com.github.RuriChoco.Photopaper</div>
-                </li>
-            </ol>
+                    <div class="cmd-group" style="margin-top: 1.5rem;">
+                        <span class="cmd-comment"># 2. Install Photopaper</span>
+                        <div class="cmd-line">
+                            <span class="cmd-text" id="cmd2">flatpak install RuriChoco com.github.RuriChoco.Photopaper</span>
+                            <button class="copy-btn" onclick="copyText('cmd2', this)">Copy</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin: 2rem 0; color: var(--text-muted); display: flex; align-items: center;">
+                <hr style="flex-grow: 1; border: none; border-top: 1px solid var(--glass-border);">
+                <span style="padding: 0 1rem; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px;">OR</span>
+                <hr style="flex-grow: 1; border: none; border-top: 1px solid var(--glass-border);">
+            </div>
+
+            <a href="RuriChoco.flatpakrepo" class="btn">
+                Download .flatpakrepo (GNOME Software)
+            </a>
         </div>
         
         <footer>
@@ -213,5 +363,41 @@
         </footer>
     </div>
 
+    <script>
+        // Copy to clipboard functionality
+        function copyText(elementId, btn) {
+            const text = document.getElementById(elementId).innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = btn.innerText;
+                btn.innerText = 'Copied!';
+                btn.classList.add('copied');
+                
+                setTimeout(() => {
+                    btn.innerText = originalText;
+                    btn.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        // Optional: Add simple 3D tilt effect on card mousemove
+        const card = document.querySelector('.card');
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            
+            const rotateX = ((y - centerY) / centerY) * -5;
+            const rotateY = ((x - centerX) / centerX) * 5;
+            
+            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+        });
+
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+        });
+    </script>
 </body>
 </html>
