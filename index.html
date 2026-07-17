@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RuriChoco Flatpak Apps</title>
+    <meta name="description" content="Personal Flatpak repository for RuriChoco applications.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-color);
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(147, 51, 234, 0.15) 0%, transparent 50%);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #60a5fa, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #e2e8f0;
+        }
+
+        .btn {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            text-decoration: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            text-align: center;
+            width: 100%;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: var(--primary-hover);
+            transform: scale(1.02);
+        }
+
+        .code-block {
+            background: #000;
+            border-radius: 8px;
+            padding: 1rem;
+            font-family: monospace;
+            color: #10b981;
+            overflow-x: auto;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .code-block::before {
+            content: "$ ";
+            color: #6b7280;
+        }
+
+        .steps {
+            list-style: none;
+            counter-reset: my-counter;
+        }
+
+        .steps li {
+            counter-increment: my-counter;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-left: 2.5rem;
+        }
+
+        .steps li::before {
+            content: counter(my-counter);
+            position: absolute;
+            left: 0;
+            top: 2px;
+            width: 1.5rem;
+            height: 1.5rem;
+            background: rgba(59, 130, 246, 0.2);
+            color: #60a5fa;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: 800;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        footer a {
+            color: #60a5fa;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (min-width: 640px) {
+            .btn {
+                width: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>RuriChoco Apps</h1>
+            <p>The official Flatpak repository for my personal applications.</p>
+        </header>
+
+        <div class="card">
+            <h2>Add to GNOME Software (Graphical)</h2>
+            <p style="margin-bottom: 1.5rem; color: var(--text-muted);">
+                The easiest way to install apps is to add the repository directly to your software center. Once added, you can search for and install apps like <strong>Photopaper</strong> graphically.
+            </p>
+            <a href="RuriChoco.flatpakrepo" class="btn">⬇️ Add Repository to Flatpak</a>
+        </div>
+
+        <div class="card">
+            <h2>Command Line Installation</h2>
+            <ol class="steps">
+                <li>
+                    <p>Add the repository to your system:</p>
+                    <div class="code-block">flatpak remote-add --if-not-exists RuriChoco https://rurichoco.github.io/flatpak-apps/RuriChoco.flatpakrepo</div>
+                </li>
+                <li>
+                    <p>Install Photopaper:</p>
+                    <div class="code-block">flatpak install RuriChoco com.github.RuriChoco.Photopaper</div>
+                </li>
+            </ol>
+        </div>
+        
+        <footer>
+            Built with ❤️ by <a href="https://github.com/RuriChoco" target="_blank">RuriChoco</a>.
+        </footer>
+    </div>
+
+</body>
+</html>
